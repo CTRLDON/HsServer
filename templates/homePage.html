@@ -13,36 +13,7 @@
          <input type = "file" name = "files[]" id="file" multiple/>
          <input type = "submit"/>
       </form>
-      <button><a href="http://192.168.1.52:5000/files">Files</a></button>
+      <button><a href="/files">Files</a></button>
       <div id="progress-bar">HELLO</div>
-    <script>
-        // Create an XMLHttpRequest object
-var xhr = new XMLHttpRequest();
-
-// Set the request method and the request URL
-xhr.open("POST", "/upload");
-
-// Set the response type to arraybuffer
-xhr.responseType = "arraybuffer";
-
-// Send the request
-xhr.send(file);
-
-// Get the file contents as an array buffer
-var arrayBuffer = xhr.response;
-
-// Calculate the progress
-var progress = 0;
-var bytesRead = 0;
-var arrayBufferLength = arrayBuffer.byteLength;
-while (bytesRead < arrayBufferLength) {
-    bytesRead += arrayBuffer.slice(bytesRead, bytesRead + 1024).byteLength;
-    progress = bytesRead / arrayBufferLength * 100;
-}
-
-// Update the progress bar
-var progressBar = document.getElementById("progressBar");
-progressBar.style.width = progress + "%";
-    </script>
 </body>
 </html>
