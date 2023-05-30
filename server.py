@@ -1,6 +1,7 @@
 import flask
 from werkzeug.utils import secure_filename
 import os
+import socket
 
 
 server = flask.Flask(__name__ , template_folder="templates" , static_folder="staticFiles")
@@ -48,5 +49,7 @@ def files():
 
 if __name__ == "__main__":
     uploadFolder = os.path.join(os.getcwd() , "F")
+    deviceName = socket.gethostname()
+    ip_address = socket.gethostbyname(deviceName)
     server.config['UPLOAD_FOLDER'] = uploadFolder
-    server.run(host="192.168.1.52" , port=5000 , debug=True)
+    server.run(host=ip_address , port=5000 , debug=True)
