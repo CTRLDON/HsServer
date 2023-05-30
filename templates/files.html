@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>files</title>
+</head>
+<body>
+    <ul>
+    {% for link,prop in links_dict.items() %}
+    <li><a href="{{link}}">{{link}} </a>{{prop[0]}} <a href="{{prop[1]}}">Delete</a></li>
+    {% endfor %}
+    </ul>
+    <button><a href="http://192.168.1.52:5000/">Home</a></button>
+</body>
+</html>
