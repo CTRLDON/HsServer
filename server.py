@@ -22,7 +22,7 @@ def uploadFiles():
         for file in files:
             file.save(os.path.join(server.config["UPLOAD_FOLDER"] , secure_filename(file.filename)))
         return flask.render_template("homePage.html")
-    
+
 @server.route("/download/<filename>")
 def downloadFile(filename):
     return flask.send_file(os.path.join(os.path.join(os.getcwd() , "F") , filename),as_attachment=True)
@@ -31,20 +31,24 @@ def downloadFile(filename):
 def deleteFile(filename):
     os.remove(os.path.join(server.config["UPLOAD_FOLDER"],filename))
     return server.redirect("/files")
-    
+
+@server.route("/preview/<filename>")
+def preview(filename):
+    return flask.send_file(os.path.join(server.config["UPLOAD_FOLDER"],filename))
+
 @server.route("/files")
 def files():
     def max_len(file):
         if len(str(file)) > 3:
             return float(str(file)[0:4])
-        
+
     files = os.listdir(os.path.join(os.getcwd() , "F"))
     links_dict = {}
     for file in files:
         file_size = os.stat(os.path.join(os.getcwd() , f"F/{file}")).st_size / (1024 * 1024)
         file_size = max_len(file_size)
         downloadfile = flask.url_for("downloadFile" , filename=file)
-        links_dict[downloadfile] = [f"{file_size}MB" , flask.url_for("deleteFile" , filename=file)]
+        links_dict[downloadfile] = [f"{file_size}MB" , flask.url_for("deleteFile" , filename=file) , flask.url_for("preview",filename=file)]
     return flask.render_template("files.html" , links_dict=links_dict)
 
 if __name__ == "__main__":
