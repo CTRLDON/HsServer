@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='signing.css') }}">
 </head>
 <body>
-    <form action="{{url_for('sign_up')}}" method="post">
-        <h1 class="sign-title">Sign Up</h1>
-        <input name="username" class="username" type="text" maxlength="12" placeholder="Enter your username:" required>
-        <input name="email" type="email" placeholder="example@mail.com" required>
-        <input name="password" type="password" minlength="8" maxlength="16" placeholder="from 8 to 16 max" required>
-        <input type="submit">
-    </form>
+    <nav class="navigation">
+        <a class="home-link" href="/">Home</a>
+        <a class='login-link'href="/login">Login</a>
+        <a class="sign-link" href="/signup">Sign up</a>
+        <img src="{{url_for('static',filename='hsLogo.jpg')}}" class="title" width="70px" height="70px">
+    </nav>
+    
+    <div class="container">
+        <form action="{{url_for('sign_up')}}" method="post">
+            <h1 class="sign-title">Sign Up</h1>
+            <input name="username" class="username" type="text" maxlength="12" placeholder="Enter your username:" required>
+            <input name="email" type="email" placeholder="example@mail.com" required>
+            <input name="password" type="password" minlength="8" maxlength="16" placeholder="from 8 to 16 max" required>
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
 </body>
 </html>

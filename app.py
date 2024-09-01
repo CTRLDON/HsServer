@@ -62,7 +62,7 @@ def flask_creation():
             password = request.form.get('password')
             email = request.form.get('email')
             pm = PasswordHasher()
-            hashed_pass = pm.hash(password)
+            hashed_pass = pm.hash(password , salt=None)
             new_user = User(username=username,password=hashed_pass,email=email)
             db.session.add(new_user)
             db.session.commit()
@@ -75,14 +75,19 @@ def flask_creation():
         if request.method == 'POST':
             login_name = request.form.get('username')
             password = request.form.get('password')
-            email = request.form.get('email')
+            # email = request.form.get('email')
             pm = PasswordHasher()
-            hashed_pass = pm.hash(password)
-            user = db.get_or_404(User,login_name)
-            if user.password == hashed_pass:
+            # hashed_pass = pm.hash(password,salt=None)
+
+            user = db.session.execute(select(User).filter_by(username=login_name))
+            user = user.scalar()
+            print(user.username)
+            # print(hashed_pass)
+            try:
+                pm.verify(user.password , password)
                 return redirect(url_for('user_files',username=user.username))
-            else:
-                render_template('login.html')
+            except VerifyMismatchError:
+                return render_template('login.html')
 
         return render_template('login.html')
 
