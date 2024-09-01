@@ -7,11 +7,6 @@
     <title>files</title>
 </head>
 <body>
-    <ul>
-    {% for link,prop in links_dict.items() %}
-    <li><a href="{{link}}">{{link}} </a>{{prop[0]}} <a href="{{prop[1]}}">Delete</a> <a href="{{prop[2]}}">Preview  </a></li>
-    {% endfor %}
-    </ul>
-    <button><a href="/">Home</a></button>
+    <h1 class="welcoming">welcome {{ username }}</h1>
 </body>
 </html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <form action="{{url_for('login')}}" method="post">
+        <h1 class="login-title">Sign Up</h1>
+        <input name="username" class="username" type="text" maxlength="12" placeholder="Enter your username:" required>
+        <!-- <input name="email" type="email" placeholder="example@mail.com" required> -->
+        <input name="password" type="password" minlength="8" maxlength="16" placeholder="from 8 to 16 max" required>
+        <input type="submit">
+    </form>
+</body>
+</html>
