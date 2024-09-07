@@ -49,7 +49,7 @@ nav {
     display: grid;
     width: 100%;
     height: 100%;
-    margin-top: 17%;
+    margin-top: 13%;
     justify-items: center;
     align-items: center;
     form{
@@ -89,6 +89,11 @@ nav {
             height: 100%;
             width: 100%;
             padding: 20px 0 20px 10px;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 15px;
         }
 
     }

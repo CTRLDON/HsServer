@@ -16,6 +16,7 @@ from sqlalchemy.orm import Mapped , mapped_column
 from os import mkdir,path
 import socket
 import re
+from utils import login_status,set_session
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
@@ -49,7 +50,7 @@ def flask_creation():
         db.create_all() # setting up the database on app context
 
     @app.route('/')
-    # @login_required
+    @login_status
     def index():
         return render_template("homePage.html") # rendering home page
     
@@ -79,19 +80,25 @@ def flask_creation():
         if request.method == 'POST':
             login_name = request.form.get('username') # getting the username from the form
             password = request.form.get('password') # getting the password from the form
+            remember = request.form.get('save-info')
             # email = request.form.get('email')
             pm = PasswordHasher() # the hashing object
             # hashed_pass = pm.hash(password,salt=None)
 
             user = db.session.execute(select(User).filter_by(username=login_name)) # searching first for the user in the database
             user = user.scalar() # converting the returned data to a list
-            print(user.username)
+            if user == None:
+                return render_template('login.html' , error_msg = "username or password is incorrect")
+            
+            if remember == "on":
+                session['username'] = login_name
+                session['user_id'] = user.user_id
             # print(hashed_pass)
             try:
                 pm.verify(user.password , password) # checking if the password related the retrieved user matches the entered password hash
                 return redirect(url_for('user_files',uid=user.user_id)) # if true it will redirect to the files page of the user
             except VerifyMismatchError:
-                return render_template('login.html') # else it will get back again (for now but in the future it will send a message to the user in the website)
+                return render_template('login.html' , error_msg = "username or password is incorrect") # else it will get back again (for now but in the future it will send a message to the user in the website)
 
         return render_template('login.html')
 
