@@ -29,10 +29,10 @@ def retrieve_ip():
     soc.close()
     return ip
 
-# create a server class for defining Flask application
+# create a server functiion for defining Flask application
 def flask_creation():
     app = Flask(__name__) # creating a Flask object
-    lm = LoginManager()
+    lm = LoginManager() # creating a password manager object
     lm.init_app(app) # on initilization of the server object trigger this function
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///users.db" # creating a URI for users database
     app.secret_key = "cc6e169f370f521ac2d5a301caf06c57af57cecfa67c05a1437f2aee10e9681e" # secret key for hashing
@@ -43,6 +43,7 @@ def flask_creation():
         username:Mapped[str] = mapped_column(unique=True,nullable=False) # making the username unique for each user
         email:Mapped[str] = mapped_column(nullable=False)# email address field
         password:Mapped[str] = mapped_column(nullable=False) # password hash saved
+        user_id:Mapped[str] = mapped_column(nullable=False)
     
     with app.app_context():
         db.create_all() # setting up the database on app context
@@ -52,49 +53,53 @@ def flask_creation():
     def index():
         return render_template("homePage.html") # rendering home page
     
-    @lm.user_loader
-    def load_user(userId):
-        return User.query.get(userId)
+    # @lm.user_loader
+    # def load_user(userId):
+    #     return User.query.get(userId)
+    
+
     @app.route('/signup' , methods=['POST','GET'])
     def sign_up():
-        if request.method == 'POST':
-            username = request.form.get('username')
-            password = request.form.get('password')
-            email = request.form.get('email')
-            pm = PasswordHasher()
-            hashed_pass = pm.hash(password , salt=None)
-            new_user = User(username=username,password=hashed_pass,email=email)
-            db.session.add(new_user)
-            db.session.commit()
+        if request.method == 'POST': # checking the the method type
+            username = request.form.get('username') # getting the username from the form section
+            password = request.form.get('password') # getting the password entered from the user
+            email = request.form.get('email') # getting the email address from the user
+            pm = PasswordHasher() # setting up password hashing object
+            hashed_pass = pm.hash(password , salt=None) # hashing the entered password to save in the database
+            uid = hashed_pass[len(hashed_pass)-6:] # getting a special user id from the last 6 characters
+            new_user = User(username=username,password=hashed_pass,email=email , user_id = uid) # saving the data of the user in a User object
+            db.session.add(new_user) # adding the user in the database
+            db.session.commit() # saving the changes
             
-            return redirect(url_for('user_files',username=username))
-        return render_template('register.html')
+            return redirect(url_for('user_files',uid=uid)) # redirecting to the files page of this user
+        return render_template('register.html') # rendering the register page if the method is GET
     
     @app.route('/login' , methods=['POST','GET'])
     def login():
         if request.method == 'POST':
-            login_name = request.form.get('username')
-            password = request.form.get('password')
+            login_name = request.form.get('username') # getting the username from the form
+            password = request.form.get('password') # getting the password from the form
             # email = request.form.get('email')
-            pm = PasswordHasher()
+            pm = PasswordHasher() # the hashing object
             # hashed_pass = pm.hash(password,salt=None)
 
-            user = db.session.execute(select(User).filter_by(username=login_name))
-            user = user.scalar()
+            user = db.session.execute(select(User).filter_by(username=login_name)) # searching first for the user in the database
+            user = user.scalar() # converting the returned data to a list
             print(user.username)
             # print(hashed_pass)
             try:
-                pm.verify(user.password , password)
-                return redirect(url_for('user_files',username=user.username))
+                pm.verify(user.password , password) # checking if the password related the retrieved user matches the entered password hash
+                return redirect(url_for('user_files',uid=user.user_id)) # if true it will redirect to the files page of the user
             except VerifyMismatchError:
-                return render_template('login.html')
+                return render_template('login.html') # else it will get back again (for now but in the future it will send a message to the user in the website)
 
         return render_template('login.html')
 
 
-    @app.route('/files/<username>')
-    def user_files(username):
-        return render_template('files.html',username=username)
+    @app.route('/files/<uid>')
+    def user_files(uid):
+        user = db.session.execute(select(User).where(User.user_id == uid)).scalar() # selecting a user based on the user_id provided
+        return render_template('files.html',username=user.username) # rendering the page
     
     
     return app
