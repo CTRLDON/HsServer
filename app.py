@@ -53,9 +53,9 @@ def flask_creation():
     def index():
         return render_template("homePage.html") # rendering home page
     
-    # @lm.user_loader
-    # def load_user(userId):
-    #     return User.query.get(userId)
+    @lm.user_loader
+    def load_user(userId):
+        return User.query.get(userId)
     
 
     @app.route('/signup' , methods=['POST','GET'])
