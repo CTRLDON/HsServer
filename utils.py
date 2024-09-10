@@ -6,9 +6,10 @@ def login_status(func):
     @wraps(func)
     def decorator(*args, **kwargs):
         # Check if user is logged in
-        if 'username' in session:
-            return redirect(url_for("user_files" , uid=session['user_id'])) # User is not logged in; redirect to login page
-            
+        if 'username' not in session.keys():
+            # print(session['username'])
+            return redirect('/home') # User is not logged in; redirect to login page
+        
         return func(*args, **kwargs)
     
     return decorator

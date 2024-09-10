@@ -52,7 +52,11 @@ def flask_creation():
     @app.route('/')
     @login_status
     def index():
-        return render_template("homePage.html") # rendering home page
+        return redirect(url_for("user_files",uid=session['user_id'])) # rendering home page
+    
+    @app.route('/home')
+    def homePage():
+        return render_template("homePage.html")
     
     @lm.user_loader
     def load_user(userId):
@@ -67,7 +71,7 @@ def flask_creation():
             email = request.form.get('email') # getting the email address from the user
             pm = PasswordHasher() # setting up password hashing object
             hashed_pass = pm.hash(password , salt=None) # hashing the entered password to save in the database
-            uid = hashed_pass[len(hashed_pass)-6:] # getting a special user id from the last 6 characters
+            uid = hashed_pass[len(hashed_pass)-9:] # getting a special user id from the last 6 characters
             new_user = User(username=username,password=hashed_pass,email=email , user_id = uid) # saving the data of the user in a User object
             db.session.add(new_user) # adding the user in the database
             db.session.commit() # saving the changes
@@ -89,7 +93,7 @@ def flask_creation():
             user = user.scalar() # converting the returned data to a list
             if user == None:
                 return render_template('login.html' , error_msg = "username or password is incorrect")
-            
+            print(remember)
             if remember == "on":
                 session['username'] = login_name
                 session['user_id'] = user.user_id
@@ -102,6 +106,13 @@ def flask_creation():
 
         return render_template('login.html')
 
+
+    @app.route('/logout' , methods=['POST','GET'])
+    def logout():
+        session.clear()
+        session.permanent = False
+        print("test")
+        return redirect(url_for("homePage"))
 
     @app.route('/files/<uid>')
     def user_files(uid):
