@@ -15,7 +15,6 @@ from sqlalchemy import Integer , String , select
 from sqlalchemy.orm import Mapped , mapped_column
 from os import mkdir,path
 import socket
-import re
 from utils import login_status,set_session
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
@@ -107,16 +106,18 @@ def flask_creation():
         return render_template('login.html')
 
 
-    @app.route('/logout' , methods=['POST','GET'])
+    @app.route('/logout' , methods=['POST','GET']) # logout function to logout of the account
     def logout():
-        session.clear()
-        session.permanent = False
-        print("test")
-        return redirect(url_for("homePage"))
+        session.clear() # removing the username and the user_id from the session in the website
+        session.permanent = False # setting the permanent status to False so when you close the tab it won't open your account
+        print("test") # debugging
+        return redirect(url_for("homePage")) # redirecting to the homepage
 
     @app.route('/files/<uid>')
     def user_files(uid):
         user = db.session.execute(select(User).where(User.user_id == uid)).scalar() # selecting a user based on the user_id provided
+        if user == None:
+            return redirect(url_for("index"))
         return render_template('files.html',username=user.username) # rendering the page
     
     

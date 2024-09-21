@@ -5,12 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>files</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='files.css')}}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <h1 class="welcoming">welcome {{ username }}</h1>
-    <button class="log-out" id="log-out">Log Out</button>
-
+    <!-- <h1 class="welcoming">welcome {{ username }}</h1> -->
+    <nav class="navbar">
+        <div class="project-name">
+            HsServer
+        </div>
+        <div class="profile" id="profile">
+            <span class="welcome">Welcome, <span class="welcome" id="username">{{ username }}</span></span>
+            <img src="profile-icon.png" alt="" class="profile-icon">
+            <div id="dropdown-menu" class="dropdown-content">
+                <button id="logout-btn">Logout</button>
+            </div>
+        </div>
+    </nav>
     <script src="{{ url_for('static' , filename='main.js') }}"></script>
 </body>
 </html>
