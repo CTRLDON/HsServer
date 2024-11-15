@@ -124,7 +124,6 @@ def flask_creation():
     return app
 
 
-
 if __name__ == '__main__':
     ip_address = retrieve_ip()
     ser = flask_creation()
