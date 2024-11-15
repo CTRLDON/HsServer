@@ -1,0 +1,81 @@
+/* Style for the navigation bar */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+}
+
+/* Style for the project name */
+.project-name {
+    font-size: 1.5rem;
+}
+
+/* Style for the profile section */
+.profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Style for the profile icon */
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* Dropdown menu style */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    color: black;
+    min-width: 100px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+.dropdown-content button:hover {
+    background-color: #ddd;
+}
+
+
+.upload-btn {
+    color: white;
+    font-size: 18px;
+    background-color:transparent;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+
+}
+
+.upload-btn:hover {
+    background-color: white;
+    color: #333;
+}
